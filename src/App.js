@@ -19,6 +19,36 @@ class App extends Component {
     search: '',
     highlightedOption: 'HOME',
     savedVideos: [],
+    dislikedVideos: [],
+    likedVideos: ['30b642bd-7591-49f4-ac30-5c538f975b15'],
+  }
+
+  updateDislikedVideos = id => {
+    const {dislikedVideos} = this.state
+    if (dislikedVideos.includes(id)) {
+      const updatedVideos = dislikedVideos.filter(each => each !== id)
+
+      this.setState({dislikedVideos: updatedVideos})
+    } else {
+      this.setState(prevState => ({
+        dislikedVideos: [...prevState.dislikedVideos, id],
+      }))
+    }
+  }
+
+  updateLikeVideos = id => {
+    const {likedVideos} = this.state
+    console.log('udate app')
+
+    if (likedVideos.includes(id)) {
+      const updatedVideos = likedVideos.filter(each => each !== id)
+
+      this.setState({likedVideos: updatedVideos})
+    } else {
+      this.setState(prevState => ({
+        likedVideos: [...prevState.likedVideos, id],
+      }))
+    }
   }
 
   changeMode = () => {
@@ -36,31 +66,40 @@ class App extends Component {
     this.setState({highlightedOption: id})
   }
 
-  changeSavedVideos = (dataObject, save) => {
-    if (save) {
-      const {savedVideos} = this.state
-      const isIn = savedVideos.filter(each => each.id === dataObject.id)
-      if (isIn.length === 0) {
-        this.setState(prevState => ({
-          savedVideos: [...prevState.savedVideos, dataObject],
-        }))
-      }
+  changeSavedVideos = (dataObject, id) => {
+    const {savedVideos} = this.state
+    const dataObjects = {...dataObject, id}
+    const filt = savedVideos.filter(each => each.id === id)
+    if (filt.length === 0) {
+      this.setState(prevState => ({
+        savedVideos: [...prevState.savedVideos, dataObjects],
+      }))
     } else {
-      const {savedVideos} = this.state
       const filterList = savedVideos.filter(each => each.id !== dataObject.id)
       this.setState({savedVideos: filterList})
     }
   }
 
   render() {
-    const {darkMode, search, highlightedOption, savedVideos} = this.state
-    console.log('search', search)
+    const {
+      darkMode,
+      search,
+      dislikedVideos,
+      highlightedOption,
+      savedVideos,
+      likedVideos,
+    } = this.state
+    console.log('search', search, 'app', likedVideos)
     return (
       <ReactContext.Provider
         value={{
           darkMode,
           search,
+          dislikedVideos,
+          likedVideos,
           savedVideos,
+          updateDislikedVideos: this.updateDislikedVideos,
+          updateLikeVideos: this.updateLikeVideos,
           addSaveList: this.changeSavedVideos,
           changeSearchInput: this.changeSearchInput,
           changeMode: this.changeMode,

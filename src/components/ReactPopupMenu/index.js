@@ -11,7 +11,7 @@ import {
 } from './styledComponents'
 
 const ReactPopupMenu = props => (
-  <ReactContext>
+  <ReactContext.Consumer>
     {value => {
       const {darkMode, highlightedOption, changeHighlightedOption} = value
       const {each} = props
@@ -59,16 +59,18 @@ const ReactPopupMenu = props => (
       }
 
       return (
-        <OptionContainer darkMode={darkMode} highlight={highlight}>
-          {icon}
+        <Link to={routeTo}>
+          <OptionContainer darkmode={darkMode} highlight={highlight}>
+            {icon}
 
-          <CloseButton onClick={changeHighlightOne}>
-            <IconText>{text}</IconText>
-          </CloseButton>
-        </OptionContainer>
+            <CloseButton onClick={changeHighlightOne}>
+              <IconText>{text}</IconText>
+            </CloseButton>
+          </OptionContainer>
+        </Link>
       )
     }}
-  </ReactContext>
+  </ReactContext.Consumer>
 )
 
 export default ReactPopupMenu

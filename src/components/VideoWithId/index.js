@@ -1,25 +1,12 @@
 import {Component} from 'react'
 import Loader from 'react-loader-spinner'
-import ReactPlayer from 'react-player'
+
 import Cookies from 'js-cookie'
 import ReactContext from '../../context/ReactContext'
 import Header from '../Header'
 import Sidebar from '../Sidebar'
+import VideoViewPage from '../VideoViewPage'
 
-import {
-  ChannelName,
-  SubscriberCount,
-  LikeContainer,
-  LikeIcon,
-  Description,
-  ChannelAndSubscriber,
-  DislikeIcon,
-  SaveIcon,
-  LikeButton,
-  LikePara,
-  LikeViewCountContainer,
-  HorizontalLine,
-} from './styledComponents'
 import {
   NoSearchResultsContainer,
   NoVideos,
@@ -30,28 +17,19 @@ import {
   Loading,
   RetryButton,
 } from '../Home/styledComponents'
-import {
-  DetailsContainer,
-  Title,
-  ChannelContainer,
-  ChannelImage,
-  MoreDetailsPara,
-  MoreDetails,
-} from '../VideoPreview/styledComponents'
 
 const apiStatus = {
   initialState: 'INITIAL',
   progress: 'PROGRESS',
   success: 'SUCCESS',
   failure: 'FAILURE',
+  id: '',
 }
 
 class VideoWithId extends Component {
   state = {
     dataObject: {},
-    like: false,
-    save: true,
-    dislike: false,
+
     status: apiStatus.initialState,
   }
 
@@ -59,26 +37,8 @@ class VideoWithId extends Component {
     this.getVideoData()
   }
 
-  clickLikeButton = () => {
-    const {like} = this.state
-    if (like) {
-      this.setState({like: false})
-    } else {
-      this.setState({dislike: false, like: true})
-    }
-  }
-
   onRetry = () => {
     this.getVideoData()
-  }
-
-  clickDislikeButton = () => {
-    const {dislike} = this.state
-    if (dislike) {
-      this.setState({dislike: false})
-    } else {
-      this.setState({like: false, dislike: true})
-    }
   }
 
   changeIntoCamelCase = object => ({
@@ -141,6 +101,7 @@ class VideoWithId extends Component {
     const {id} = params
     const url = `https://apis.ccbp.in/videos/${id}`
     console.log(url)
+
     const options = {
       method: 'GET',
       headers: {
@@ -154,117 +115,30 @@ class VideoWithId extends Component {
       const detailsObject = this.changeIntoCamelCase(data.video_details)
       console.log(detailsObject)
       this.onSuccess(detailsObject)
+      this.setState({id})
     } else {
       this.onFailure()
     }
   }
 
-  renderVideoDetails = (darkMode, addSaveList, highlightedOption) => {
-    const {dataObject, like, save, dislike} = this.state
-    const {
-      videoUrl,
-      channel,
-      description,
-
-      publishedAt,
-      title,
-      viewCount,
-    } = dataObject
-    const width = '100%'
-    const goOn = () => {
-      addSaveList(dataObject, save)
-    }
-
-    const savedLists = () => {
-      this.setState(
-        prevState => ({
-          save: !prevState.save,
-        }),
-        goOn(),
-      )
-    }
-    let saves
-
-    if (highlightedOption === 'SAVED') {
-      saves = 'Saved'
-    } else {
-      saves = !save ? 'Saved' : 'Save'
-    }
+  renderVideoDetails = () => {
+    const {dataObject, id} = this.state
 
     return (
       <>
-        <ReactPlayer url={videoUrl} width={width} />
-
-        <DetailsContainer darkMode={darkMode}>
-          <Title color={darkMode ? 'white' : '#424242'}>{title}</Title>
-          <LikeViewCountContainer>
-            <MoreDetails>
-              <MoreDetailsPara color={darkMode ? '#cccccc' : '#606060'}>
-                {viewCount}
-              </MoreDetailsPara>
-              <MoreDetailsPara color={darkMode ? '#cccccc' : '#606060'}>
-                {publishedAt}
-              </MoreDetailsPara>
-            </MoreDetails>
-            <LikeContainer>
-              <LikeButton
-                type="button"
-                onClick={this.clickLikeButton}
-                color={like ? '#4f46e5' : '#475569'}
-              >
-                <LikeIcon />
-                <LikePara color={like ? '#4f46e5' : '#475569'}>Like</LikePara>
-              </LikeButton>
-              <LikeButton
-                type="button"
-                onClick={this.clickDislikeButton}
-                color={dislike ? '#4f46e5' : '#475569'}
-              >
-                <DislikeIcon />
-                <LikePara color={dislike ? '#2563eb' : '#64748b'}>
-                  Dislike
-                </LikePara>
-              </LikeButton>
-              <LikeButton
-                onClick={savedLists}
-                type="button"
-                color={save ? '#2563eb' : '#64748b'}
-              >
-                <SaveIcon />
-                <LikePara color={!save ? '#2563eb' : '#64748b'}>
-                  {saves}
-                </LikePara>
-              </LikeButton>
-            </LikeContainer>
-          </LikeViewCountContainer>
-          <HorizontalLine />
-          <ChannelContainer>
-            <ChannelImage alt="channel logo" src={channel.profile_image_url} />
-            <ChannelAndSubscriber>
-              <ChannelName color={darkMode ? '#f1f1f1' : '#1e293b'}>
-                {channel.name}
-              </ChannelName>
-              <SubscriberCount color={darkMode ? '#7e858e' : '#909090'}>
-                {channel.subscriber_count} subscribers
-              </SubscriberCount>
-              <Description color={darkMode ? '#f1f1f1' : '#606060'}>
-                {description}
-              </Description>
-            </ChannelAndSubscriber>
-          </ChannelContainer>
-        </DetailsContainer>
+        <VideoViewPage dataObject={dataObject} id={id} />
       </>
     )
   }
 
-  renderStatus = (darkMode, addSaveList, highlightedOption) => {
+  renderStatus = darkMode => {
     const {status} = this.state
 
     switch (true) {
       case status === apiStatus.progress:
         return this.renderLoading(darkMode)
       case status === apiStatus.success:
-        return this.renderVideoDetails(darkMode, addSaveList, highlightedOption)
+        return this.renderVideoDetails(darkMode)
       case status === apiStatus.failure:
         return this.renderFailure(darkMode)
       default:
@@ -272,12 +146,12 @@ class VideoWithId extends Component {
     }
   }
 
-  renderOutput = (darkMode, addSaveList, highlightedOption) => (
+  renderOutput = darkMode => (
     <HomeContainer data-testid="videoItemDetails" darkMode={darkMode}>
       <Header />
       <Sidebar />
       <BannerVideosContainer>
-        {this.renderStatus(darkMode, addSaveList, highlightedOption)}
+        {this.renderStatus(darkMode)}
       </BannerVideosContainer>
     </HomeContainer>
   )
@@ -286,9 +160,9 @@ class VideoWithId extends Component {
     return (
       <ReactContext.Consumer>
         {value => {
-          const {darkMode, addSaveList, savedVideos, highlightedOption} = value
-          console.log('saved_list: ', savedVideos)
-          return this.renderOutput(darkMode, addSaveList, highlightedOption)
+          const {darkMode} = value
+
+          return this.renderOutput(darkMode)
         }}
       </ReactContext.Consumer>
     )

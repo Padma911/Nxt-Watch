@@ -99,24 +99,6 @@ class Gaming extends Component {
     )
   }
 
-  noSearchResults = darkMode => (
-    <NoSearchResultsContainer>
-      <NoVideos
-        src="https://assets.ccbp.in/frontend/react-js/nxt-watch-no-search-results-img.png"
-        alt="no videos"
-      />
-      <NoVideosStatement color={darkMode ? 'white' : '7e858e'}>
-        No Search results found
-      </NoVideosStatement>
-      <NoVideosParagraph color={darkMode ? '#cccccc' : '#94a3b8'}>
-        Try different key words or remove search filter
-      </NoVideosParagraph>
-      <RetryButton type="button" onClick={this.onRetry}>
-        Retry
-      </RetryButton>
-    </NoSearchResultsContainer>
-  )
-
   trendingContainer = darkMode => {
     console.log(darkMode)
     return (
@@ -149,18 +131,12 @@ class Gaming extends Component {
     )
   }
 
-  renderVideos = darkMode => {
-    const {videosList} = this.state
-    console.log('videos', darkMode)
-    return (
-      <SearchVideosContainer darkMode={darkMode}>
-        {this.trendingContainer(darkMode)}
-        {videosList.length === 0
-          ? this.noSearchResults(darkMode)
-          : this.renderVideoPreviews(darkMode)}
-      </SearchVideosContainer>
-    )
-  }
+  renderVideos = darkMode => (
+    <SearchVideosContainer darkMode={darkMode}>
+      {this.trendingContainer(darkMode)}
+      {this.renderVideoPreviews(darkMode)}
+    </SearchVideosContainer>
+  )
 
   renderLoading = darkMode => (
     <Loading className="loader-container" data-testid="loader">

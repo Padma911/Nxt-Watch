@@ -1,5 +1,3 @@
-import {Link} from 'react-router-dom'
-
 import {
   SideBarContainer,
   TopContainer,
@@ -11,7 +9,6 @@ import {
 } from './styledComponents'
 import ReactPopupMenu from '../ReactPopupMenu'
 import ReactContext from '../../context/ReactContext'
-import Menu from '../Menu'
 
 const OptionsList = [
   {
@@ -29,7 +26,7 @@ const OptionsList = [
   {
     id: 'GAMING',
     text: 'Gaming',
-    link: '/trending',
+    link: '/gaming',
     dataTestid: 'gaming',
   },
   {
@@ -47,9 +44,7 @@ const Sidebar = () => (
         <SideBarContainer darkMode={darkMode}>
           <TopContainer>
             {OptionsList.map(each => (
-              <Link to={each.link}>
-                <ReactPopupMenu key={each.id} each={each} />
-              </Link>
+              <ReactPopupMenu key={each.id} each={each} />
             ))}
           </TopContainer>
           <BottomContainer>

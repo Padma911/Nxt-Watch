@@ -81,6 +81,7 @@ class Home extends Component {
 
     const response = await fetch(url, options)
     const data = await response.json()
+    console.log('home data', data)
 
     if (response.status === 200) {
       const videoObject = data.videos
@@ -155,7 +156,7 @@ class Home extends Component {
     )
   }
 
-  renderVideoPreviews = savedVideos => {
+  renderVideoPreviews = () => {
     const {videosList} = this.state
 
     return (

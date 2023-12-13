@@ -274,5 +274,5 @@ export const LogoutButton = styled(Buttons)`
   }};
 `
 export const LogoutText = styled.h1`
-  font-size: 20px;
+  font-size: 15px;
 `

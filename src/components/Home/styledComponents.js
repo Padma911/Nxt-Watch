@@ -21,7 +21,7 @@ export const BannerVideosContainer = styled.div`
   }};
   height: auto;
   @media (min-width: 768px) {
-    width: 80vw;
+    width: 78vw;
     height: 85vh;
     overflow-y: auto;
   }

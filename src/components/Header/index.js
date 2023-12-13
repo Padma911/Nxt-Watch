@@ -15,7 +15,6 @@ import {
   ButtonsContainer,
   LogoutContainer,
   LogoutQuestion,
-  LogoutText,
   MenuContainer,
   Buttons,
   ConfirmButton,
@@ -56,7 +55,7 @@ const Header = props => {
     {
       id: 'GAMING',
       text: 'Gaming',
-      link: '/trending',
+      link: '/gaming',
       dataTestid: 'gaming',
     },
     {
@@ -87,7 +86,7 @@ const Header = props => {
             {dayIcon}
           </CloseButton>
 
-          <img
+          <Profile
             src="https://assets.ccbp.in/frontend/react-js/nxt-watch-profile-img.png"
             alt="profile"
           />
@@ -106,9 +105,7 @@ const Header = props => {
                   </CloseButtonContainer>
                   <OptionsContainer>
                     {OptionsList.map(each => (
-                      <Link to={each.link}>
-                        <ReactPopupMenu each={each} key={each.id} />
-                      </Link>
+                      <ReactPopupMenu each={each} key={each.id} />
                     ))}
                   </OptionsContainer>
                 </MenuContainer>
@@ -119,9 +116,9 @@ const Header = props => {
             <Popup
               modal
               trigger={
-                <button type="button" className="trigger-button">
+                <LogoutButton type="button" className="trigger-button">
                   Logout
-                </button>
+                </LogoutButton>
               }
             >
               {close => (
